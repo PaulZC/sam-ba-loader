@@ -132,6 +132,9 @@ class SAMBA(object):
 		else:
 			self.LOG.debug('Read Version = %s' % version)
 
+		sleep(0.01) # The Arduino bootloader appends a \0 on the end - which we need to flush
+		self.transport.flush()
+
 		return version
 
 
@@ -196,7 +199,7 @@ class SAMBA(object):
 			Word of data read from the attached device.
 		"""
 
-		self.transport.write(self._serialize_command(SAMBACommands.READ_WORD, arguments=[address]))
+		self.transport.write(self._serialize_command(SAMBACommands.READ_WORD, arguments=[address, '4'])) # bossac sends wXXXXXXXX,4#
 		word = sum([x << (8 * i) for i, x in enumerate(self.transport.read(4))])
 		self.LOG.debug('Read Word @ 0x%08x: 0x%08x' % (address, word))
 		return word
