@@ -91,10 +91,10 @@ class DSU(ChipIdentifier.ChipIdentifierBase):
 		if self.chip_id == 0:
 			return False
 
-		self.processor = (self.chip_id >> 28) & 0x000F
-		self.family    = (self.chip_id >> 23) & 0x001F
-		self.series    = (self.chip_id >> 16) & 0x003F
-		self.die       = (self.chip_id >> 12) & 0x000F
-		self.revision  = (self.chip_id >>  8) & 0x000F
-		self.variant   = (self.chip_id >>  0) & 0x00FF
+		self.processor = (self.chip_id >> 28) & 0x000F # Bits 31:28 – PROCESSOR[3:0]
+		self.family    = (self.chip_id >> 23) & 0x001F # Bits 27:23 – FAMILY[4:0]
+		self.series    = (self.chip_id >> 16) & 0x003F # Bits 21:16 – SERIES[5:0]
+		self.die       = (self.chip_id >> 12) & 0x000F # Bits 15:12 – DIE[3:0]
+		self.revision  = (self.chip_id >>  8) & 0x000F # Bits 11:8  – REVISION[3:0]
+		self.variant   = (self.chip_id >>  0) & 0x00FF # Bits 7:0   – DEVSEL[7:0]
 		return True
