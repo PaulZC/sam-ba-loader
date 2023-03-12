@@ -62,12 +62,17 @@ class CHIPID(ChipIdentifier.ChipIdentifierBase):
 	}
 
 	ARCHITECTURE = {
+		0x10 : 'SAME70 Series',
+		0x11 : 'SAMS70 Series',
+		0x12 : 'SAMV71 Series',
+		0x13 : 'SAMV70 Series',
 		0x19 : 'AT91SAM9xx Series',
 		0x29 : 'AT91SAM9XExx Series',
 		0x34 : 'AT91x34 Series',
 		0x37 : 'CAP7 Series',
 		0x39 : 'CAP9 Series',
 		0x3B : 'CAP11 Series',
+		0x3C : 'SAM4E Series',
 		0x40 : 'AT91x40 Series',
 		0x42 : 'AT91x42 Series',
 		0x55 : 'AT91x55 Series',
