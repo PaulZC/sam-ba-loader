@@ -10,12 +10,14 @@ from . import Part
 from . import CortexM0p
 
 
-class ATSAMD(CortexM0p):
-	"""Part class for all SAM D based parts."""
+class ATSAMD21(CortexM0p):
+	"""Part class for all SAMD21 based parts.
+	   Note: this will also return true for SAMR21 devices. TODO: fix this.
+	"""
 
 	@staticmethod
 	def identify(ids):
-		"""Determines if the given chip identifiers positively identify a SAM D
+		"""Determines if the given chip identifiers positively identify a SAMD21
 		   series device.
 
 		Args:
