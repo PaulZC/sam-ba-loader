@@ -11,12 +11,12 @@ from . import CortexM0p
 
 
 @Part.UntestedPart
-class ATSAML(CortexM0p):
-	"""Part class for all SAM L series parts."""
+class ATSAML21(CortexM0p):
+	"""Part class for all SAML21 series parts."""
 
 	@staticmethod
 	def identify(ids):
-		"""Determines if the given chip identifiers positively identify a SAM L
+		"""Determines if the given chip identifiers positively identify a SAML21
 		   series device.
 
 		Args:
@@ -31,7 +31,7 @@ class ATSAML(CortexM0p):
 		result = False
 		try:
 			id_values = ids['DSU']
-			result = id_values.processor == 1 and id_values.family == 1 and id_values.series == 2
+			result = id_values.processor == 1 and id_values.family == 1 and id_values.series == 1
 		except:
 			return False
 		return result
