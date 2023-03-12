@@ -137,7 +137,7 @@ def read_from_file(file_path):
 	return f.data
 
 
-def args_parse():
+def args_parse(args):
 	parser = argparse.ArgumentParser(
 		description='Atmel SAM-BA client tool',
 		epilog='Copyright (C) Dean Camera, 2016. Victoria Danchenko, 2019.')
@@ -151,6 +151,8 @@ def args_parse():
 		help='special identifier register addresses; example: CPUID=0xE000ED00,CHIPID=0x400E0740')
 	parser.add_argument('--flash-boot', action='store_true', help='make boot from flash when work was done')
 	parser.add_argument('--reset', action='store_true', help='reset chip when work was done')
+	parser.add_argument('-s', '--serial', action='store_true', \
+		help='Use serial mode with auto baud handshake')
 	subparsers = parser.add_subparsers(dest='cmd', help='sub-command help')
 	parser_read = subparsers.add_parser('parts', help='Show the supported parts list')
 	parser_read = subparsers.add_parser('info', help='Read info about the chip')
@@ -170,7 +172,7 @@ def args_parse():
 	parser_read = subparsers.add_parser('erase', help='Erase flash plane or entire chip')
 	parser_read.add_argument('-a', metavar='DEC_HEX', \
 		help='flash plane address. Default: entire chip. Example: 0x400000 or 4M')
-	return parser.parse_args()
+	return parser.parse_args(args)
 
 
 def parse_number(text):
@@ -203,9 +205,8 @@ def number_to_text(number):
 			return str(number / multiplier) + suffix
 
 
-if __name__ == '__main__':
+def startLoader(args):
 	# logging.basicConfig(level=logging.WARNING)
-	args = args_parse()
 	logging.basicConfig(level=[ logging.WARNING, logging.INFO, logging.DEBUG ][min(args.v, 2)])
 	logging.info('START ' + datetime.now().isoformat())
 
@@ -247,14 +248,15 @@ if __name__ == '__main__':
 				print('{:02} {}'.format(i + 1, v))
 		else:
 			try:
-				transport = SAMBALoader.Transports.Serial(port=args.port)
+				transport = SAMBALoader.Transports.SerialTransport(port=args.port)
 			except Exception as e:
 				print(e)
 				sys.exit(2)
-			samba = SAMBALoader.SAMBA(transport, is_usb=True)
+			samba = SAMBALoader.SAMBA(transport, is_usb = not args.serial)
 			session = Session(samba)
 
 			logging.info('SAMBA Version: %s' % samba.get_version())
+			print('SAMBA Version: %s' % samba.get_version())
 
 			# chip recognition by their identifiers
 			# read a special registers from chip
@@ -335,3 +337,12 @@ if __name__ == '__main__':
 	except SessionError as e:
 		logging.error(str(e))
 		sys.exit(1)
+
+if __name__ == '__main__':
+
+	if len(sys.argv) < 2:
+		parser = args_parse(['-vvv','-p','COM12','info']) #Test args: replace with (e.g.) ['-vvv','-p','COM12','info']
+	else:
+		parser  = args_parse(sys.argv[1:]) #Parse the args
+
+	startLoader(parser)
