@@ -256,7 +256,7 @@ def startLoader(args):
 			session = Session(samba)
 
 			logging.info('SAMBA Version: %s' % samba.get_version())
-			print('SAMBA Version: %s' % samba.get_version())
+			print('SAMBA Version: %s' % samba.get_version()) # This does a duplicate V# transaction. I guess that's OK...
 
 			# chip recognition by their identifiers
 			# read a special registers from chip
