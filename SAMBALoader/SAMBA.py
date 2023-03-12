@@ -8,7 +8,7 @@
 
 import logging
 from . import Transports
-
+from time import sleep
 
 class SAMBACommands:
 	"""Core SAM-BA bootloader commands."""
@@ -45,13 +45,19 @@ class SAMBA(object):
 		self.transport = transport
 		self.is_usb = is_usb
 
+		sleep(0.01);
+		self.transport.flush()
+
 		if not self.is_usb:
 			self.LOG.debug('Serial mode, sending auto baud handshake')
-			self.transport.write([0xFF, 0xFF, 0xFF, 0xFF, '#'])
+			#self.transport.write([0xFF, 0xFF, 0xFF, 0xFF, '#']) # original code
+			# bossa / bossac does this:
+			self.transport.write([0x80, 0x80, '#'])
+			self.transport.read(3, True) # Ignore a timeout here
 
-		self.LOG.debug('Set normal mode')
+		self.LOG.debug('Set normal (binary) mode')
 		self.transport.write(self._serialize_command(SAMBACommands.SET_NORMAL_MODE, arguments=[]))
-		self.transport.read(2)
+		self.transport.read(2, True) # Ignore a timeout here
 
 
 	def _to_32bit_hex(self, value):
