@@ -51,3 +51,9 @@ class TransportBase(object):
 			data -- Bytes to write.
 		"""
 		pass
+
+	@abc.abstractmethod
+	def flush(self):
+		"""Flush the transport input and output buffers.
+		"""
+		pass

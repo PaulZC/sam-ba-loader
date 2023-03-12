@@ -9,8 +9,7 @@
 from . import Transport
 import logging
 
-
-class Serial(Transport.TransportBase):
+class SerialTransport(Transport.TransportBase):
 	"""Serial transport for SAM-BA devices using a COM port."""
 
 	LOG = logging.getLogger(__name__)
@@ -129,7 +128,7 @@ class Serial(Transport.TransportBase):
 			return bytearray([ord(d) if isinstance(d, str) else d for d in data])
 
 
-	def read(self, length):
+	def read(self, length, ignoreTimeout = False):
 		"""Reads a given number of bytes from the serial interface.
 
 		Args:
@@ -143,10 +142,16 @@ class Serial(Transport.TransportBase):
 		"""
 
 		data = self.serialport.read(length)
-		if len(data) != length:
-			raise Transport.TimeoutError()
 
-		self.LOG.debug('Receive %d bytes %s' % (len(data), [b for b in data]))
+		if len(data) > 0:
+			self.LOG.debug('Received %d bytes %s' % (len(data), [b for b in data]))
+
+		if len(data) != length:
+			if ignoreTimeout:
+				self.LOG.debug('Received %d bytes. Expected %d. Ignoring' % (len(data), length))
+			else:
+				self.LOG.debug('Received %d bytes. Expected %d. Raising TimeoutError' % (len(data), length))
+				raise Transport.TimeoutError()
 
 		return bytearray(data)
 
@@ -161,3 +166,9 @@ class Serial(Transport.TransportBase):
 		self.LOG.debug('Send %d bytes: %s' % (len(data), [b for b in data]))
 
 		self.serialport.write(self._to_byte_array(data))
+
+	def flush(self):
+		"""Flush (clear) the serial buffer"""
+
+		self.serialport.flushInput()
+		self.serialport.flushOutput()

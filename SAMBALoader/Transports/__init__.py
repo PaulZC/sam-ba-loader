@@ -7,5 +7,5 @@
 #
 
 from .Transport import *
-from .Serial import *
+from .SerialTransport import *
 from .XMODEM import *
