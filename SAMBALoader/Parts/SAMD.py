@@ -27,8 +27,8 @@ class ATSAMD(CortexM0p):
 			series device.
 		"""
 		try:
-			id_values = ids['DSU']
-			id_values.processor == 1 and id_values.family == 0 and id_values.series == 0
+			id_values = idS['DSU']
+			id_values.processor == 1 and id_values.family == 0 and id_values.series == 1
 		except:
 			return False
 		return True
