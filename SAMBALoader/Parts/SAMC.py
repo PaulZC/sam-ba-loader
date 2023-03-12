@@ -27,9 +27,11 @@ class ATSAMC(CortexM0p):
 			`True` if the given identifiers suggest the part is a SAM C
 			series device.
 		"""
+
+		result = False
 		try:
 			id_values = ids['DSU']
-			id_values.processor == 1 and id_values.family == 2 and id_values.series == 1
+			result = id_values.processor == 1 and id_values.family == 2 and id_values.series == 1
 		except:
 			return False
-		return True
+		return result

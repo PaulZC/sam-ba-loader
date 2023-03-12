@@ -27,9 +27,11 @@ class ATSAML(CortexM0p):
 			`True` if the given identifiers suggest the part is a SAM L
 			series device.
 		"""
+		
+		result = False
 		try:
 			id_values = ids['DSU']
-			id_values.processor == 1 and id_values.family == 1 and id_values.series == 2
+			result = id_values.processor == 1 and id_values.family == 1 and id_values.series == 2
 		except:
 			return False
-		return True
+		return result

@@ -14,7 +14,7 @@ class ATSAMD(CortexM0p):
 	"""Part class for all SAM D based parts."""
 
 	@staticmethod
-	def identify(idS):
+	def identify(ids):
 		"""Determines if the given chip identifiers positively identify a SAM D
 		   series device.
 
@@ -26,9 +26,11 @@ class ATSAMD(CortexM0p):
 			`True` if the given identifiers suggest the part is a SAM D
 			series device.
 		"""
+		
+		result = False
 		try:
-			id_values = idS['DSU']
-			id_values.processor == 1 and id_values.family == 0 and id_values.series == 1
+			id_values = ids['DSU']
+			result = id_values.processor == 1 and id_values.family == 0 and id_values.series == 1
 		except:
 			return False
-		return True
+		return result
