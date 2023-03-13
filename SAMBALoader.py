@@ -152,7 +152,7 @@ def args_parse(args):
 	parser.add_argument('--flash-boot', action='store_true', help='make boot from flash when work was done')
 	parser.add_argument('--reset', action='store_true', help='reset chip when work was done')
 	parser.add_argument('-s', '--serial', action='store_true', \
-		help='Use serial mode with auto baud handshake')
+		help='use serial mode with auto baud handshake')
 	subparsers = parser.add_subparsers(dest='cmd', help='sub-command help')
 	parser_read = subparsers.add_parser('parts', help='Show the supported parts list')
 	parser_read = subparsers.add_parser('info', help='Read info about the chip')

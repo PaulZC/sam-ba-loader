@@ -44,3 +44,9 @@ class ATSAMD21(CortexM0p):
 		except:
 			return False
 		return result
+
+	def reset(self):
+		"""Reset the chip
+		"""
+
+		self.samba.write_word(0xE000ED0C, 0x05FA0004) # This is the way bossa does it
