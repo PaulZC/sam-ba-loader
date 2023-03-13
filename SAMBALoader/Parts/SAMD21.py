@@ -8,12 +8,20 @@
 
 from . import Part
 from . import CortexM0p
-
+from ..FlashControllers import NVMCTRL
 
 class ATSAMD21(CortexM0p):
 	"""Part class for all SAMD21 based parts.
 	   Note: this will also return true for SAMR21 devices. TODO: fix this.
 	"""
+
+	def __init__(self, samba):
+		"""Initializes class
+		"""
+		CortexM0p.__init__(self, samba)
+		self.FLASH_CONTROLLER = (
+			NVMCTRL(0x41004000)
+			)
 
 	@staticmethod
 	def identify(ids):
