@@ -99,7 +99,7 @@ class CortexM0p(Part.PartBase):
 		if address is None:
 			address = self.FLASH_APP_ADDRESS
 
-		self.FLASH_CONTROLLER.program_flash(self.samba, address, data)
+		return self.FLASH_CONTROLLER.program_flash(self.samba, address, data)
 
 
 	def verify_flash(self, data, address=None):
