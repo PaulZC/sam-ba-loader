@@ -18,6 +18,7 @@ class NVMCTRL(FlashController.FlashControllerBase):
 	ADDRESS_OFFSET   = 0x001C
 
 	CTRLB_MANW       = (1 << 7)
+	CTRLB_CACHEDIS   = (1 << 18)
 
 	INTFLAG_READY    = (1 << 0)
 	INTFLAG_ERROR    = (1 << 1)
@@ -123,7 +124,10 @@ class NVMCTRL(FlashController.FlashControllerBase):
 
 		self._get_nvm_params(samba)
 
-		samba.write_word(self.base_address + self.CTRLB_OFFSET, self.CTRLB_MANW)
+		# bossac does a read-modify-write, setting 7 and 18 to disable cache and configure manual page write
+		ctrlb = samba.read_word(self.base_address + self.CTRLB_OFFSET)
+		ctrlb |= self.CTRLB_MANW | self.CTRLB_CACHEDIS
+		samba.write_word(self.base_address + self.CTRLB_OFFSET, ctrlb)
 
 		self._command(samba, self.CTRLA_CMDA['PBC'])
 		self._wait_while_busy(samba)
