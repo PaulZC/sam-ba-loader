@@ -140,7 +140,7 @@ def read_from_file(file_path):
 def args_parse(args):
 	parser = argparse.ArgumentParser(
 		description='Atmel SAM-BA client tool',
-		epilog='Copyright (C) Dean Camera, 2016. Victoria Danchenko, 2019.')
+		epilog='Copyright (C) Dean Camera, 2016. Victoria Danchenko, 2019. SparkFun, 2023.')
 	parser.add_argument('-v', action='count', default=0, help='verbose level: -v, -vv')
 	parser.add_argument('-p', '--port', \
 		default='1' if sys.platform.startswith('win') else '0', \
