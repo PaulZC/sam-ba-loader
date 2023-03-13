@@ -169,6 +169,12 @@ def args_parse(args):
 	parser_write.add_argument('-l', metavar='DEC_HEX', help='length. Example: 0x100 or 256 or 1k or 1M')
 	parser_write.add_argument('-f', required=True, metavar='FILE_PATH', \
 		help='file to write from, explicit. Example: {0}1.bin or {0}1.hex'.format('C:\\' if sys.platform.startswith('win') else '~/'))
+	parser_write = subparsers.add_parser('verify', help='Verify the chip')
+	parser_write.add_argument('-a', metavar='DEC_HEX', \
+		help='start address. Default: flash start. Example: 0x400000 or 4M')
+	parser_write.add_argument('-l', metavar='DEC_HEX', help='length. Example: 0x100 or 256 or 1k or 1M')
+	parser_write.add_argument('-f', required=True, metavar='FILE_PATH', \
+		help='file to verify, explicit. Example: {0}1.bin or {0}1.hex'.format('C:\\' if sys.platform.startswith('win') else '~/'))
 	parser_read = subparsers.add_parser('erase', help='Erase flash plane or entire chip')
 	parser_read.add_argument('-a', metavar='DEC_HEX', \
 		help='flash plane address. Default: entire chip. Example: 0x400000 or 4M')
@@ -320,6 +326,36 @@ def startLoader(args):
 				if not result:
 					print('Error while programming')
 					sys.exit(2)
+
+			elif args.cmd == 'verify':
+				data = read_from_file(args.f)
+				try:
+					result = part.verify_flash(data, parse_number(args.a))
+				except SAMBALoader.Transports.TimeoutError:
+					try:
+						port_info = str(samba.transport)
+					except:
+						port_info = ''
+					else:
+						port_info = ' ({})'.format(port_info)
+					print('Error while verifying{}:'.format(port_info))
+					print('Timeout happened'.format(port_info))
+					sys.exit(1)
+				except Exception as e:
+					try:
+						port_info = str(samba.transport)
+					except:
+						port_info = ''
+					else:
+						port_info = ' ({})'.format(port_info)
+					print('Error while verifying{}:'.format(port_info))
+					print(e)
+					sys.exit(2)
+				if result is not None:
+					print('Error while verifying: address 0x%08X actual 0x%08X expected 0x%08X' % (result[0], result[1], result[2]))
+					sys.exit(2)
+				else:
+					print('Verify: success')
 
 			elif args.cmd == 'erase':
 				part.erase_chip(parse_number(args.a))

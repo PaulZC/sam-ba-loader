@@ -157,7 +157,12 @@ class NVMCTRL_D5x(FlashController.FlashControllerBase):
 			tuple of the first mismatch.
 		"""
 
-		for (chunk_address, chunk_data) in self._chunk(self.page_size, address, data):
+		self._get_nvm_params(samba)
+
+		# From bossac:
+		# "The SAM firmware has a bug reading powers of 2 over 32 bytes via USB."
+		# So do the read in chunks of 32 bytes
+		for (chunk_address, chunk_data) in self._chunk(32, address, data):
 			actual_data = samba.read_block(chunk_address, len(chunk_data))
 
 			for offset in range(0, len(chunk_data), 4):
